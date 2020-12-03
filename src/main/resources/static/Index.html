@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket客户端</title>
+</head>
+<body>
+<script src="./socket.io.js"></script>
+<script type="text/javascript">
+    var socket = io.connect("ws://127.0.0.1:8888");
+    socket.on('connect', function(){
+        console.log("connect...");
+        var txt = document.getElementById("responseText");
+        txt.value = "已经建立长连接...";
+        socket.emit('event', {token: 'token', message: 'ack'});
+    });
+    socket.on('event', function(data){
+        var txt = document.getElementById("responseText");
+        txt.value = txt.value + "\n[系统]:" + data.msg;
+        console.log("event:" + JSON.stringify(data));
+    });
+    socket.on('msg', function(data){
+        var txt = document.getElementById("responseText");
+        txt.value = txt.value + "\n[消息]:" + data;
+        console.log("msg:" + data);
+    });
+    socket.on('disconnect', function(){
+        var txt = document.getElementById("responseText");
+        txt.value = txt.value +"\n"+"连接断开...";
+        console.log("disconnect...");
+    });
+    socket.on('reconnect', function(reconnectAttempts){
+        console.log("reconnect："+ reconnectAttempts);
+    });
+    socket.on('error', function(error){
+        console.log("error：" + error);
+    });
+
+    //发送数据
+    function send(message){
+        socket.emit('event', {token: 'token', message: message});
+    }
+</script>
+<form onsubmit="return false">
+    <textarea name = "message" style="width: 400px;height: 200px"></textarea>
+
+    <input type ="button" value="发送数据" onclick="send(this.form.message.value);">
+
+    <h3>服务端输出：</h3>
+
+    <textarea id ="responseText" style="width: 400px;height: 300px;"></textarea>
+
+    <input type="button" onclick="javascript:document.getElementById('responseText').value=''" value="清空数据">
+</form>
+</body>
+</html>

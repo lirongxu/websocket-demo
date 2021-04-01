@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 public class SessionManager {
     private final Lock sessionLock = new ReentrantLock();
-    private List<UUID> sessionList = new ArrayList<>();
+    private Set<UUID> sessionList = new HashSet<>();
 
     public void addSession(UUID sessionId) {
         sessionLock.lock();
@@ -35,7 +35,7 @@ public class SessionManager {
         }
     }
 
-    public List<UUID> getSessionList(){
+    public Set<UUID> getSessionList(){
         return sessionList;
     }
 }

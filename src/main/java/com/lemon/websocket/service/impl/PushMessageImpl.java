@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -25,7 +25,7 @@ public class PushMessageImpl implements PushService {
 
     @Override
     public void pushMessage(String message) {
-        List<UUID> sessionList = sessionManager.getSessionList();
+        Set<UUID> sessionList = sessionManager.getSessionList();
 
         sessionList.forEach(session -> {
             log.info("send message:{}  {}", message, session);
